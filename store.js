@@ -47,5 +47,19 @@ ListStore = {
         notifyComponents()
       })
   },
-  toggleCompleteness: function(itemId) {}
-}
+  toggleCompleteness: function(itemId) {
+    var item = findItemById(itemId)
+    var currentCompletedValue = item.completed
+
+    var updateRequest = $.ajax({
+      type: 'PUT',
+      url: "https://listalous.herokuapp.com/lists/mySportsTeams/items/" + itemId,
+      data: { completed: !currentCompletedValue }
+    })
+
+    updateRequest.done(function(itemData) {
+      item.completed = itemData.completed
+      notifyComponents()
+      })
+    }
+  }
