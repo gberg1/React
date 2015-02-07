@@ -1,0 +1,51 @@
+var items = []
+
+var notifyComponents = function() {
+
+  $(ListStore).trigger('storeHasChanged')
+}
+
+var foo = function() {
+  debugger
+}
+
+var findItemById = function(id) {
+  return items.filter(function(item) {
+    return item.id === id
+  })[0]
+}
+
+ListStore = {
+
+  getItems: function() {
+    return items
+  },
+
+  loadItems: function() {
+    var loadRequest = $.ajax({
+      type: 'GET',
+      url: "http://listalous.herokuapp.com/lists/mySportsTeams"
+    }) 
+
+
+    loadRequest.done(function(dataFromServer) {
+
+      items = dataFromServer.items
+      notifyComponents()
+    })
+  },
+
+  addItem: function(itemDescription) {
+    var creationRequest = $.ajax({
+      type: 'POST',
+      url: "http://listalous.herokuapp.com/lists/mySportsTeams/items",
+      data: {description: itemDescription, completed: false}
+    })
+
+      creationRequest.done(function(itemDataFromServer) {
+        items.push(itemDataFromServer)
+        notifyComponents()
+      })
+  },
+  toggleCompleteness: function(itemId) {}
+}
